@@ -1,0 +1,6 @@
+# 专属浮岛竞技场实例池由 YknTD 运行时管理；也可用管理员命令创建额外手工场地。
+# 手工场地结构为 arenas.<场地ID>.lobby/core/lanes.<north|east|south|west>.spawn/ward。
+# 自动场地入口只保存 generated/world 元数据，十个实例坐标从固定布局实时重建。
+# 未完成核心及四路坐标配置的手工场地不能开局。
+
+arenas: {}

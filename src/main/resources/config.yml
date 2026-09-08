@@ -1,0 +1,149 @@
+# YknTD 主配置。时间若未特别说明，单位均为秒；带 -ticks 的配置以 20 tick = 1 秒计算。
+config-version: 6
+
+# Multiverse-Core 管理的专属虚空竞技场。世界固定存放在服务端 tdmap 文件夹中。
+dedicated-arena:
+  enabled: true
+  arena-id: night_raid
+  # 最多同时运行的独立竞技场实例，严格限制在 1～10。
+  instance-count: 10
+  # 作为实例世界名前缀，实际世界为 floating_island_night_raid_01～_10。
+  world-name: floating_island_night_raid
+  # true：启动时预建全部实例；false：像 YknBoss 一样在需要时按需创建。
+  auto-create: false
+  # 每场新夜袭的首位玩家传送前，通过 Multiverse 完整重建一次世界。
+  reset-before-session: true
+  # 半径只调整世界边界；修改地面高度或种子后，重启时会通过 Multiverse 完整重建竞技场。
+  radius: 96
+  floor-y: 80
+  seed: 731946285104
+
+game:
+  min-players: 1
+  max-players: 6
+  countdown-seconds: 30
+  intermission-seconds: 12
+  tick-period-ticks: 5
+  wave-time-limit-seconds: 420
+  mob-cap: 80
+  auto-start: true
+  teleport-on-join: true
+  restore-location: true
+  allow-late-join: false
+  friendly-fire: false
+  protect-arena: true
+  boundary-radius: 96.0
+  disconnect-grace-seconds: 60
+  all-offline-fail-seconds: 30
+
+# 进入夜袭后只临时替换 SKYBLOCK 侧边栏内容，标题保持原样；离开或结算后自动恢复。
+# 支持 {state}/{wave}/{total-waves}/{enemies}/{players}/{max-players}、
+# {north}/{east}/{south}/{west}/{core} 及对应的 *-health、*-max 占位符。
+sidebar:
+  enabled: true
+  title: '&b&lSKYBLOCK'
+  lines:
+    - '&8&m──────────────'
+    - '&7状态 &f{state}'
+    - '&7波次 &d{wave}&7/&f{total-waves} &8│ &7敌人 &c{enemies}'
+    - ''
+    - '&b▌ 北路 {north}'
+    - '&6▌ 东路 {east}'
+    - '&a▌ 南路 {south}'
+    - '&d▌ 西路 {west}'
+    - ''
+    - '&c❤ 核心 {core}'
+    - '&7队伍 &f{players}&7/&f{max-players}'
+    - '&8&m──────────────'
+    - '&emc.infnetwork.net'
+
+objectives:
+  # 四路各有独立结界。玩家手持紫水晶碎片并交互即可消耗材料修复。
+  ward:
+    max-health: 2500.0
+    repair-material: AMETHYST_SHARD
+    repair-amount: 100.0
+    repair-range: 4.0
+    repair-cooldown-ticks: 10
+  # 任一路结界失守后，该路敌人会继续攻击核心；核心归零即判定失败。
+  core:
+    max-health: 10000.0
+
+enemy:
+  ward-attack-range: 2.8
+  core-attack-range: 3.2
+  attack-interval-ticks: 20
+  retarget-interval-ticks: 20
+  player-aggro-range: 10.0
+  path-speed: 1.0
+  remove-on-core-hit: false
+
+scaling:
+  # 每增加一名玩家所增加的比例。0.30 表示在基础值上增加 30%。
+  health-per-extra-player: 0.30
+  damage-per-extra-player: 0.12
+  count-per-extra-player: 0.22
+  # 第一波开始时锁定队伍 AuraSkills 技能奖励形成的进攻/生存中位指数；装备、宠物、护符
+  # 等额外修正已包含在各阶段波次基准中，不在这里重复计入。怪物生命只跟进攻轴、攻击只跟生存轴，
+  # 分别按指数比温和修正至 0.80～1.25 与 0.85～1.20；每波基准仍由 waves.yml 决定。
+
+contribution:
+  # 得分 = 各行为数值乘以对应权重；奖励档位只读取最终得分。
+  weights:
+    damage: 0.10
+    kill: 5.0
+    repair: 0.30
+    defense: 1.0
+    healing: 0.08
+    control: 0.50
+
+rewards:
+  # 命令由控制台执行。支持 {player}、{uuid}、{arena}、{wave}、{players}、{score}
+  # 以及 {damage}/{kill}/{repair}/{defense}/{healing}/{control} 占位符。
+  minimum-score: 25.0
+  victory:
+    base-commands:
+      - 'give {player} amethyst_shard 8'
+      - 'experience add {player} 120 points'
+    tiers:
+      defender:
+        minimum-score: 100.0
+        commands:
+          - 'give {player} emerald 2'
+      guardian:
+        minimum-score: 250.0
+        commands:
+          - 'give {player} diamond 1'
+      bulwark:
+        minimum-score: 500.0
+        commands:
+          - 'give {player} echo_shard 1'
+  failure:
+    commands:
+      - 'experience add {player} 30 points'
+
+messages:
+  prefix: '&5&l夜袭 &8» &r'
+  joined: '&a你加入了浮岛夜袭场地 &f{arena}&a。'
+  left: '&e你已离开浮岛夜袭。'
+  player-joined: '&e{player} &7加入夜袭（{current}/{max}）。'
+  player-left: '&e{player} &7离开了夜袭。'
+  player-disconnected: '&e{player} &7断开连接，保留席位 {seconds} 秒。'
+  reconnected: '&a你已重新连接到浮岛夜袭。'
+  countdown-started: '&e人数已满足，&f{seconds} 秒&e后开始夜袭。'
+  countdown-cancelled: '&c人数不足，开始倒计时已取消。'
+  countdown: '&e夜袭将在 &6{seconds} &e秒后开始。'
+  intermission: '&e下一波将在 &f{seconds} &e秒后开始。'
+  wave-started: '&c⚔ {name}开始！ &7人数：{players}。'
+  wave-cleared: '&a第 {wave} 波已清除，下一波将在 {seconds} 秒后开始。'
+  ward-destroyed: '&4⚠ {lane}结界已经失守！该路怪物将攻击核心。'
+  not-participant: '&c你不是本场夜袭的参与者。'
+  ward-breached: '&c{lane}已经失守，本局无法重建。'
+  ward-full: '&e{lane}结界无需修复。'
+  repair-material: '&c修复需要 1 个 {material}。'
+  repaired: '&a已修复 {lane} &f+{amount} &7（{health}/{max}）。'
+  returned-to-arena: '&e你离开了场地区域，已被送回大厅。'
+  finished: '{result} &7{reason}'
+  score-summary: '&b本场贡献：&f{score} &7| 奖励档：{tier}'
+  pending-reward: '&a已补发离线期间结算的夜袭奖励。 &7贡献 {score}，档位 {tier}。'
+  dedicated-entry-denied: '&c只能通过 &f/ykntd join &c进入自己所属的夜袭实例。'

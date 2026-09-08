@@ -1,0 +1,136 @@
+content-version: 3
+
+# 默认十波全部使用原版怪物，因此未安装 MythicMobs 也可游玩。
+# 1～3 波对应 YknRpg 普通/少见装备与前期宠物，4～7 波对应稀有/史诗装备与中期宠物，
+# 8～10 波对应传说/神话装备与后期宠物。基础生命/攻击同时参考了新版 AuraSkills
+# 53 组分段奖励（1～50 / 51～80 / 81～100）与 YknRpg 的实际战斗公式。
+# recommended-aura-level 是全体启用技能同步成长时的参考等级；开局分别取队伍进攻、
+# 生存指数的中位数并锁定。怪物生命只跟进攻轴修正，攻击只跟生存轴修正。
+# base-health/base-damage 是单人绝对基础值；后者会在 YknRpg 防御和 AuraSkills 减伤之前生效。
+# amount-per-lane 保证四路压力一致，人数仍会按 config.yml 的 scaling 再缩放。
+
+waves:
+  1:
+    name: '&7亡者探路'
+    stage: EARLY
+    recommended-aura-level: 0
+    spawn-interval-ticks: 16
+    time-limit-seconds: 120
+    groups:
+      - {provider: VANILLA, id: ZOMBIE, amount-per-lane: 3, lanes: [NORTH, EAST, SOUTH, WEST], level: 1, base-health: 55, base-damage: 18, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 8, boss: false}
+      - {provider: VANILLA, id: SKELETON, amount-per-lane: 2, lanes: [NORTH, EAST, SOUTH, WEST], level: 1, base-health: 45, base-damage: 16, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 6, boss: false}
+
+  2:
+    name: '&2沼泽压境'
+    stage: EARLY
+    recommended-aura-level: 10
+    spawn-interval-ticks: 14
+    time-limit-seconds: 135
+    groups:
+      - {provider: VANILLA, id: HUSK, amount-per-lane: 3, lanes: [NORTH, EAST, SOUTH, WEST], level: 2, base-health: 90, base-damage: 28, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 10, boss: false}
+      - {provider: VANILLA, id: SPIDER, amount-per-lane: 2, lanes: [NORTH, EAST, SOUTH, WEST], level: 2, base-health: 75, base-damage: 24, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 8, boss: false}
+
+  3:
+    name: '&8铁蹄冲阵'
+    stage: EARLY
+    recommended-aura-level: 20
+    spawn-interval-ticks: 12
+    time-limit-seconds: 165
+    groups:
+      - {provider: VANILLA, id: PILLAGER, amount-per-lane: 3, lanes: [NORTH, EAST, SOUTH, WEST], level: 3, base-health: 110, base-damage: 40, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 15, boss: false}
+      - {provider: VANILLA, id: VINDICATOR, amount-per-lane: 2, lanes: [NORTH, EAST, SOUTH, WEST], level: 3, base-health: 130, base-damage: 45, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 20, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 1, lanes: [NORTH, EAST, SOUTH, WEST], level: 3, base-health: 550, base-damage: 60, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 60, boss: true}
+
+  4:
+    name: '&3&l暮色异变'
+    stage: MID
+    recommended-aura-level: 30
+    spawn-interval-ticks: 11
+    time-limit-seconds: 180
+    groups:
+      - {provider: VANILLA, id: BOGGED, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 4, base-health: 360, base-damage: 70, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 18, boss: false}
+      - {provider: VANILLA, id: CAVE_SPIDER, amount-per-lane: 2, lanes: [NORTH, EAST, SOUTH, WEST], level: 4, base-health: 300, base-damage: 60, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 15, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 1, lanes: [NORTH, SOUTH], level: 4, base-health: 1400, base-damage: 85, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 80, boss: true}
+
+  5:
+    name: '&6裂阵战号'
+    stage: MID
+    recommended-aura-level: 40
+    spawn-interval-ticks: 10
+    time-limit-seconds: 210
+    groups:
+      - {provider: VANILLA, id: HUSK, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 5, base-health: 320, base-damage: 95, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 25, boss: false}
+      - {provider: VANILLA, id: PILLAGER, amount-per-lane: 3, lanes: [NORTH, EAST, SOUTH, WEST], level: 5, base-health: 280, base-damage: 85, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 20, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 1, lanes: [NORTH, EAST, SOUTH, WEST], level: 5, base-health: 1300, base-damage: 115, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 100, boss: true}
+
+  6:
+    name: '&5魂火军团'
+    stage: MID
+    recommended-aura-level: 50
+    spawn-interval-ticks: 9
+    time-limit-seconds: 225
+    groups:
+      - {provider: VANILLA, id: WITHER_SKELETON, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 6, base-health: 1100, base-damage: 125, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 28, boss: false}
+      - {provider: VANILLA, id: SKELETON, amount-per-lane: 3, lanes: [NORTH, EAST, SOUTH, WEST], level: 6, base-health: 900, base-damage: 110, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 25, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 2, lanes: [EAST, WEST], level: 6, base-health: 3200, base-damage: 150, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 120, boss: true}
+
+  7:
+    name: '&4深夜围城'
+    stage: MID
+    recommended-aura-level: 60
+    spawn-interval-ticks: 8
+    time-limit-seconds: 240
+    groups:
+      - {provider: VANILLA, id: VINDICATOR, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 7, base-health: 1000, base-damage: 165, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 35, boss: false}
+      - {provider: VANILLA, id: PILLAGER, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 7, base-health: 900, base-damage: 145, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 30, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 1, lanes: [NORTH, EAST, SOUTH, WEST], level: 7, base-health: 3600, base-damage: 195, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 150, boss: true}
+
+  8:
+    name: '&d&l无月军势'
+    stage: LATE
+    recommended-aura-level: 70
+    spawn-interval-ticks: 7
+    time-limit-seconds: 270
+    groups:
+      - {provider: VANILLA, id: WITHER_SKELETON, amount-per-lane: 5, lanes: [NORTH, EAST, SOUTH, WEST], level: 8, base-health: 2500, base-damage: 230, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 45, boss: false}
+      - {provider: VANILLA, id: BOGGED, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 8, base-health: 2100, base-damage: 205, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 40, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 1, lanes: [NORTH, EAST, SOUTH, WEST], level: 8, base-health: 8500, base-damage: 270, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 200, boss: true}
+
+  9:
+    name: '&4天幕崩裂'
+    stage: LATE
+    recommended-aura-level: 85
+    spawn-interval-ticks: 6
+    time-limit-seconds: 330
+    groups:
+      - {provider: VANILLA, id: HUSK, amount-per-lane: 5, lanes: [NORTH, EAST, SOUTH, WEST], level: 9, base-health: 6500, base-damage: 310, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 60, boss: false}
+      - {provider: VANILLA, id: VINDICATOR, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 9, base-health: 7500, base-damage: 330, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 60, boss: false}
+      - {provider: VANILLA, id: PILLAGER, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 9, base-health: 6000, base-damage: 280, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 55, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 1, lanes: [NORTH, EAST, SOUTH, WEST], level: 9, base-health: 26000, base-damage: 365, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 260, boss: true}
+
+  10:
+    name: '&4&l夜袭终局·四界同坠'
+    stage: LATE
+    recommended-aura-level: 100
+    spawn-interval-ticks: 4
+    time-limit-seconds: 420
+    groups:
+      - {provider: VANILLA, id: ZOMBIE, amount-per-lane: 5, lanes: [NORTH, EAST, SOUTH, WEST], level: 10, base-health: 12000, base-damage: 420, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 80, boss: false}
+      - {provider: VANILLA, id: WITHER_SKELETON, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 10, base-health: 14000, base-damage: 450, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 85, boss: false}
+      - {provider: VANILLA, id: PILLAGER, amount-per-lane: 4, lanes: [NORTH, EAST, SOUTH, WEST], level: 10, base-health: 11000, base-damage: 390, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 70, boss: false}
+      - {provider: VANILLA, id: RAVAGER, amount-per-lane: 1, lanes: [NORTH, EAST, SOUTH, WEST], level: 10, base-health: 80000, base-damage: 500, health-multiplier: 1.0, damage-multiplier: 1.0, ward-damage: 400, boss: true}
+
+# MythicMobs 写法示例，仅作模板，不属于默认十波，也不会被加载为波次。
+examples:
+  mythic-group:
+    provider: MYTHIC
+    id: FloatingIslandRaider
+    amount-per-lane: 2
+    lanes: [NORTH, EAST, SOUTH, WEST]
+    level: 3
+    base-health: 120
+    base-damage: 45
+    health-multiplier: 1.0
+    damage-multiplier: 1.0
+    ward-damage: 15.0
+    boss: false

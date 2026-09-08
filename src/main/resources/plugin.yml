@@ -1,0 +1,36 @@
+name: YknTD
+version: '${version}'
+main: cn.ykntd.YknTdPlugin
+description: 四路协作守卫玩法，支持最多十个独立竞技场实例
+api-version: '1.21.10'
+authors: [Ykn]
+depend:
+  - Multiverse-Core
+softdepend:
+  - AuraSkills
+  - MythicMobs
+  - RoseStacker
+
+commands:
+  ykntd:
+    description: YknTD 浮岛夜袭主命令
+    usage: /ykntd help
+    aliases: [td]
+    permission: ykntd.use
+
+permissions:
+  ykntd.use:
+    description: 允许查看帮助并使用玩家命令
+    default: true
+  ykntd.play:
+    description: 允许加入和离开浮岛夜袭
+    default: true
+  ykntd.admin:
+    description: 允许生成专属竞技场、配置、开始、停止和重载浮岛夜袭
+    default: op
+    children:
+      ykntd.use: true
+      ykntd.play: true
+  ykntd.repair.free:
+    description: 在创造模式下不消耗结界修复材料
+    default: op
