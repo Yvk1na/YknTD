@@ -140,8 +140,13 @@ public final class YknTdCommand implements CommandExecutor, TabCompleter {
 
     private void stats(CommandSender sender, String[] args) {
         PlayerStats found;
-        if (args.length >= 2) found = plugin.games().stats().findByName(args[1]).orElse(null);
-        else if (sender instanceof Player player) found = plugin.games().stats().get(player.getUniqueId()).orElse(null);
+        if (args.length >= 2) {
+            var target = plugin.getServer().getOfflinePlayerIfCached(args[1]);
+            found = target == null ? plugin.games().stats().findByName(args[1]).orElse(null)
+                    : plugin.games().stats().get(plugin.games().activeCharacter(target.getUniqueId())).orElse(null);
+        } else if (sender instanceof Player player) {
+            found = plugin.games().stats().get(plugin.games().activeCharacter(player.getUniqueId())).orElse(null);
+        }
         else {
             reply(sender, "&c控制台必须指定玩家名。");
             return;

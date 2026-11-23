@@ -18,6 +18,7 @@ import cn.ykntd.reward.RewardService;
 import cn.ykntd.reward.PendingRewardRepository;
 import cn.ykntd.stats.PlayerStatsRepository;
 import cn.ykntd.stats.RecoveryRepository;
+import dev.chengzhi.skyblockcore.profile.ProfileIdentity;
 import org.bukkit.Location;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -300,6 +301,11 @@ public final class GameManager implements YknTdApi {
         return stats;
     }
 
+    public UUID activeCharacter(UUID accountId) {
+        return plugin.getServer().getPluginManager().isPluginEnabled("Skyblock-Core")
+                ? ProfileIdentity.characterId(plugin.getServer(), accountId) : accountId;
+    }
+
     void rememberReturn(UUID playerId, Location location) {
         recovery.remember(playerId, location);
     }
@@ -309,23 +315,24 @@ public final class GameManager implements YknTdApi {
     }
 
     public boolean restorePending(Player player) {
-        Location location = recovery.get(player.getUniqueId()).orElse(null);
+        UUID character = activeCharacter(player.getUniqueId());
+        Location location = recovery.get(character).orElse(null);
         if (location == null || location.getWorld() == null) return false;
         if (!player.teleport(location)) return false;
-        recovery.clear(player.getUniqueId());
+        recovery.clear(character);
         return true;
     }
 
-    void queuePendingReward(UUID playerId, String playerName, String arena, boolean victory,
+    void queuePendingReward(UUID playerId, UUID characterId, String playerName, String arena, boolean victory,
                             int wave, Contribution contribution, int participantCount) {
         RewardService.RewardPlan plan = rewards.prepare(
                 playerId, playerName, arena, victory, wave, contribution,
                 settings.contributionWeights(), settings.minimumRewardScore(), participantCount);
-        pendingRewards.put(playerId, plan);
+        pendingRewards.put(characterId, plan);
     }
 
     public boolean deliverPendingReward(Player player) {
-        RewardService.RewardPlan plan = pendingRewards.take(player.getUniqueId()).orElse(null);
+        RewardService.RewardPlan plan = pendingRewards.take(activeCharacter(player.getUniqueId())).orElse(null);
         if (plan == null) return false;
         RewardService.RewardResult result = rewards.execute(plan);
         Messages.send(plugin, player, "pending-reward",

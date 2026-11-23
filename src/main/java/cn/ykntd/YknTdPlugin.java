@@ -180,6 +180,10 @@ public final class YknTdPlugin extends JavaPlugin {
         return arenas;
     }
 
+    public boolean hasOpenRaid(java.util.UUID accountId) {
+        return games != null && games.isParticipant(accountId);
+    }
+
     public GameManager games() {
         return games;
     }

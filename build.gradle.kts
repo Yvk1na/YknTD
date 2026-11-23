@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly(files(providers.gradleProperty("skyblockCoreJar")
+        .orElse("../Skyblock-Core/build/libs/Skyblock-Core-1.1.2.jar")))
     compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
     compileOnly("org.mvplugins.multiverse.core:multiverse-core:5.7.3")
     compileOnly("dev.aurelium:auraskills-api:2.3.12")

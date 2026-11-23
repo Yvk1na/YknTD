@@ -80,6 +80,7 @@ public final class RaidSession {
     private final UUID sessionId = UUID.randomUUID();
     private final LinkedHashSet<UUID> participants = new LinkedHashSet<>();
     private final Map<UUID, String> participantNames = new HashMap<>();
+    private final Map<UUID, UUID> participantCharacters = new HashMap<>();
     private final Map<UUID, Location> returnLocations = new HashMap<>();
     private final Map<UUID, Contribution> contributions = new LinkedHashMap<>();
     private final Map<UUID, Long> repairCooldowns = new HashMap<>();
@@ -234,17 +235,19 @@ public final class RaidSession {
     boolean addPlayer(Player player) {
         if (!isJoinable() || participants.contains(player.getUniqueId())) return false;
         UUID id = player.getUniqueId();
+        UUID character = manager.activeCharacter(id);
         Location returnLocation = player.getLocation().clone();
         if (shouldRestorePlayer()) {
             returnLocations.put(id, returnLocation);
-            manager.rememberReturn(id, returnLocation);
+            manager.rememberReturn(character, returnLocation);
         }
         if (settings.teleportOnJoin() && !player.teleport(arena.lobby())) {
             returnLocations.remove(id);
-            if (shouldRestorePlayer()) manager.clearReturn(id);
+            if (shouldRestorePlayer()) manager.clearReturn(character);
             return false;
         }
         participants.add(id);
+        participantCharacters.put(id, character);
         participantNames.put(id, player.getName());
         contributions.put(id, new Contribution());
         sidebar.show(player, sidebarSnapshot());
@@ -264,10 +267,11 @@ public final class RaidSession {
     public void removePlayer(Player player, boolean restore, String reason) {
         UUID id = player.getUniqueId();
         if (!participants.remove(id)) return;
+        UUID character = participantCharacters.remove(id);
         player.hideBossBar(bossBar);
         if (restore && shouldRestorePlayer()) {
             Location back = returnLocations.get(id);
-            if (back != null && back.getWorld() != null && player.teleport(back)) manager.clearReturn(id);
+            if (back != null && back.getWorld() != null && player.teleport(back)) manager.clearReturn(character);
             else manager.evacuateFromDedicatedWorld(player);
         }
         sidebar.hide(player);
@@ -300,7 +304,7 @@ public final class RaidSession {
 
     public void playerReconnected(Player player) {
         UUID id = player.getUniqueId();
-        if (!participants.contains(id)) return;
+        if (!participants.contains(id) || !manager.activeCharacter(id).equals(participantCharacters.get(id))) return;
         disconnectedAt.remove(id);
         participantNames.put(id, player.getName());
         player.showBossBar(bossBar);
@@ -931,17 +935,18 @@ public final class RaidSession {
     }
 
     private void settlePlayer(UUID id, RaidState result, boolean victory) {
-        Player player = plugin.getServer().getPlayer(id);
+        UUID character = participantCharacters.get(id);
+        Player player = character.equals(manager.activeCharacter(id)) ? plugin.getServer().getPlayer(id) : null;
         Contribution contribution = contributions.getOrDefault(id, new Contribution());
         double score = contribution.score(settings.contributionWeights());
         try {
             if (result != RaidState.STOPPED) {
-                stats.record(id, participantNames.getOrDefault(id, id.toString()), victory,
+                stats.record(character, participantNames.getOrDefault(id, id.toString()), victory,
                         waveNumber(), contribution, score);
             }
             if (player == null || !player.isOnline()) {
                 if (result != RaidState.STOPPED) {
-                    manager.queuePendingReward(id, participantNames.getOrDefault(id, id.toString()), arena.id(),
+                    manager.queuePendingReward(id, character, participantNames.getOrDefault(id, id.toString()), arena.id(),
                             victory, waveNumber(), contribution, participants.size());
                 }
                 return;
@@ -959,7 +964,7 @@ public final class RaidSession {
                 player.hideBossBar(bossBar);
                 if (shouldRestorePlayer()) {
                     Location back = returnLocations.get(id);
-                    if (back != null && back.getWorld() != null && player.teleport(back)) manager.clearReturn(id);
+                    if (back != null && back.getWorld() != null && player.teleport(back)) manager.clearReturn(character);
                     else manager.evacuateFromDedicatedWorld(player);
                 }
                 sidebar.hide(player);
